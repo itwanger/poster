@@ -41,8 +41,6 @@ public class AppTest extends TestCase {
 			System.out.println(en_);
 		}
 		
-		System.out.println(QrcodeUtils.makeZhLineFeed("我们笑着说再见，却深知再见遥遥无期。我们笑着说再见，却深知再见遥遥无期。我们笑着说再见，却深知再见遥遥无期。我们笑着说再见，却深知再见遥遥无期我们笑着说再见，却深知再见遥遥无期", 17));
-		
 	}
 
 	public String makelinefeed(String s) {
