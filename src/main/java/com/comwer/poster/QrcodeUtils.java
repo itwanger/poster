@@ -137,7 +137,7 @@ public class QrcodeUtils {
 			// 绘制中文文字
 			// 一行不超过17个
 			g.setColor(new Color(71, 71, 71));
-			Font font = new Font("微软雅黑", Font.PLAIN, 34);
+			Font font = new Font("微软雅黑", Font.PLAIN, 28);
 			g.setFont(font);
 
 			// 字体
@@ -227,8 +227,14 @@ public class QrcodeUtils {
 		StringBuilder sb = new StringBuilder();
 		int line_width = 0;
 		for (int i = 0; i < str.length(); i++) {
-			sb.append(str.charAt(i));
-			int char_width = metrics.charWidth(str.charAt(i));
+			char c = str.charAt(i);
+			sb.append(c);
+			if (sb.toString().endsWith("\n")) {
+				line_width = 0;
+				continue;
+			}
+			
+			int char_width = metrics.charWidth(c);
 			line_width += char_width;
 			if (line_width >= max_width - char_width) {
 				line_width = 0;

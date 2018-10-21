@@ -55,31 +55,31 @@ public class Poster {
 		frame.getContentPane().setLayout(null);
 
 		JLabel label = new JLabel("中文");
-		label.setBounds(10, 10, 54, 15);
+		label.setBounds(10, 115, 54, 15);
 		frame.getContentPane().add(label);
 
 		JLabel label_1 = new JLabel("英文");
-		label_1.setBounds(10, 121, 54, 15);
+		label_1.setBounds(10, 249, 54, 15);
 		frame.getContentPane().add(label_1);
 
 		JTextArea zh_text = new JTextArea();
-		zh_text.setText("我们笑着说再见，却深知再见遥遥无期。");
+		zh_text.setText("我选择沉默，并非我无话可说");
 		zh_text.setLineWrap(true);
-		zh_text.setBounds(79, 6, 558, 85);
+		zh_text.setBounds(79, 6, 558, 183);
 		frame.getContentPane().add(zh_text);
 
 		JTextArea en_text = new JTextArea();
-		en_text.setText("We laughed and kept saying see you soon, but inside we both knew we'd never see each other again. ");
+		en_text.setText("");
 		en_text.setLineWrap(true);
-		en_text.setBounds(79, 117, 558, 101);
+		en_text.setBounds(79, 205, 558, 101);
 		frame.getContentPane().add(en_text);
 
 		JLabel label_2 = new JLabel("图片路径");
-		label_2.setBounds(10, 251, 54, 15);
+		label_2.setBounds(10, 323, 54, 15);
 		frame.getContentPane().add(label_2);
 
 		img_input = new JTextField();
-		img_input.setBounds(79, 248, 558, 21);
+		img_input.setBounds(79, 319, 558, 21);
 		frame.getContentPane().add(img_input);
 		img_input.setColumns(10);
 
@@ -119,7 +119,7 @@ public class Poster {
 				}
 			}
 		});
-		button.setBounds(238, 298, 93, 23);
+		button.setBounds(244, 352, 93, 23);
 		frame.getContentPane().add(button);
 	}
 }
