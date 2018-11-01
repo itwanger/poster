@@ -171,7 +171,7 @@ public class QrcodeUtils {
 
 			g.drawString("沉默王二", brief_x, bg.getHeight() - margin - brief_line_height * 2);
 			g.drawString("近期目标：月入三万", brief_x, bg.getHeight() - margin - brief_line_height);
-			g.drawString("喜欢的话就扫码关注|转发分享", brief_x, bg.getHeight() - margin);
+			g.drawString("喜欢的话就扫码关注+转发分享，谢谢！", brief_x, bg.getHeight() - margin);
 
 			g.dispose();
 
