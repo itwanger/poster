@@ -162,7 +162,7 @@ public class QrcodeUtils {
 
 			// 个人简介
 			g.setColor(new Color(71, 71, 71));
-			font = new Font("微软雅黑", Font.PLAIN, 18);
+			font = new Font("微软雅黑", Font.PLAIN, 22);
 			g.setFont(font);
 
 			// 获取字体高度
@@ -170,8 +170,8 @@ public class QrcodeUtils {
 			int brief_x = margin;
 
 			g.drawString("沉默王二", brief_x, bg.getHeight() - margin - brief_line_height * 2);
-			g.drawString("程序猿/爱读书/爱写作", brief_x, bg.getHeight() - margin - brief_line_height);
-			g.drawString("对自己负责，对父母感恩", brief_x, bg.getHeight() - margin);
+			g.drawString("近期目标：月入三万", brief_x, bg.getHeight() - margin - brief_line_height);
+			g.drawString("喜欢的话就扫码关注|转发分享", brief_x, bg.getHeight() - margin);
 
 			g.dispose();
 
