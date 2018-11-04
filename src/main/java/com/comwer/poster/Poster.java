@@ -63,7 +63,7 @@ public class Poster {
 		frame.getContentPane().add(label_1);
 
 		JTextArea zh_text = new JTextArea();
-		zh_text.setText("我选择沉默，并非我无话可说");
+		zh_text.setText("沉默王二");
 		zh_text.setLineWrap(true);
 		zh_text.setBounds(79, 6, 558, 183);
 		frame.getContentPane().add(zh_text);
@@ -92,7 +92,7 @@ public class Poster {
 		lblNewLabel.setBounds(10, 406, 54, 15);
 		frame.getContentPane().add(lblNewLabel);
 		
-		JButton button = new JButton("生成海报");
+		JButton button = new JButton("生成海报1");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -119,7 +119,45 @@ public class Poster {
 				}
 			}
 		});
-		button.setBounds(244, 352, 93, 23);
+		button.setBounds(79, 352, 93, 23);
 		frame.getContentPane().add(button);
+		
+		JButton button_1 = new JButton("生成海报2");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String title = zh_text.getText();
+					if (StringUtils.isEmpty(title)) {
+						throw new Exception("标题不能为空");
+					}
+					
+					if (title.length() > 4) {
+						throw new Exception("建议标题不超过4个字");
+					}
+					
+					String content = en_text.getText();
+					if (StringUtils.isEmpty(content)) {
+						throw new Exception("内容不能为空");
+					}
+					
+					String memo = img_input.getText();
+
+					// 获取词霸的图片
+					if (StringUtils.isEmpty(memo)) {
+						throw new Exception("备注不能为空");
+					}
+
+					String filePath = QrcodeUtils.createPoster2File(title, content, memo);
+					poster_path.setText(filePath);
+				} catch (Exception e1) {
+					logger.error(e1.getMessage());
+					logger.error(e1.getMessage(), e1);
+					
+					poster_path.setText(e1.getMessage());
+				}
+			}
+		});
+		button_1.setBounds(201, 349, 117, 29);
+		frame.getContentPane().add(button_1);
 	}
 }

@@ -45,8 +45,7 @@ public class QrcodeUtils {
 		HttpGet httpget = new HttpGet(headimgUrl);
 		httpget.addHeader("Content-Type", "text/html;charset=UTF-8");
 		// 配置请求的超时设置
-		RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(500).setConnectTimeout(500).setSocketTimeout(500)
-				.build();
+		RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(500).setConnectTimeout(500).setSocketTimeout(500).build();
 		httpget.setConfig(requestConfig);
 
 		File headimgFile = null;
@@ -76,7 +75,7 @@ public class QrcodeUtils {
 		}
 
 		if (headimgFile != null && !headimgFile.exists()) {
-			throw new IllegalArgumentException("请提供正确的背景文件！");
+			throw new IllegalArgumentException("请提供正确的头部文件！");
 		}
 
 		File bgFile = Files.createTempFile("bg_", ".jpg").toFile();
@@ -88,6 +87,70 @@ public class QrcodeUtils {
 		FileUtils.copyInputStreamToFile(qrcodeInputStream, qrcodeFile);
 
 		return increasingImage(qrcodeFile, bgFile, headimgFile, zh, en);
+	}
+
+	public static String createPoster2File(String title, String content, String memo) throws Exception {
+		ClassLoader classLoader = QrcodeUtils.class.getClassLoader();
+		File bgFile = Files.createTempFile("bg_", ".jpg").toFile();
+		InputStream inputStream = classLoader.getResourceAsStream("default_book_bgimg.jpg");
+		FileUtils.copyInputStreamToFile(inputStream, bgFile);
+
+		BufferedImage bg = ImageIO.read(bgFile);
+		Graphics2D g = bg.createGraphics();
+
+		// 消除字体模糊，消除抗锯齿
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		
+		// 绘制标题和备注
+		g.setColor(new Color(71, 71, 71));
+		Font font = new Font("微软雅黑", Font.BOLD, 36);
+		g.setFont(font);
+		FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
+		
+		int title_width = 0;
+		for (int i = 0; i < title.length(); i++) {
+			char c = title.charAt(i);
+			int char_width = metrics.charWidth(c);
+			// 叠加，当前单词的长度
+			title_width += char_width;
+		}
+		
+		
+		int title_x = (bg.getWidth() - title_width) / 2;
+		g.drawString(title, title_x, 110);
+		g.drawString(memo, 46, bg.getHeight() - 210);
+		
+		
+		
+
+		// 绘制内容文字
+		font = new Font("微软雅黑", Font.PLAIN, 36);
+		g.setFont(font);
+
+		// 字体
+		metrics = FontDesignMetrics.getMetrics(font);
+
+		// 获取字体高度
+		int zh_line_height = metrics.getHeight() + 20;
+
+		// 中文字的起始Y坐标
+		int zh_y = 200;
+		// 起始X坐标
+		int zh_x = 120;
+
+		String[] rows = makeZhLineFeed(content, metrics, bg.getWidth() - zh_x * 2).split("\n");
+		for (int i = 0; i < rows.length; i++) {
+			g.drawString(rows[i], zh_x, zh_y + zh_line_height * i);
+		}
+
+		g.dispose();
+
+		File poster = Files.createTempFile("poster_" + IdGen.uuid(), ".jpg").toFile();
+		logger.info(poster.getAbsolutePath());
+
+		ImageIO.write(bg, "jpg", poster);
+
+		return poster.getAbsolutePath();
 	}
 
 	private static String increasingImage(File qrcodeFile, File bgFile, File headimgFile, String zh, String en) throws Exception {
@@ -135,7 +198,6 @@ public class QrcodeUtils {
 			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
 			// 绘制中文文字
-			// 一行不超过17个
 			g.setColor(new Color(71, 71, 71));
 			Font font = new Font("微软雅黑", Font.PLAIN, 28);
 			g.setFont(font);
@@ -233,7 +295,7 @@ public class QrcodeUtils {
 				line_width = 0;
 				continue;
 			}
-			
+
 			int char_width = metrics.charWidth(c);
 			line_width += char_width;
 			if (line_width >= max_width - char_width) {
