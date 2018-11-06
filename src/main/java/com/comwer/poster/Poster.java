@@ -54,32 +54,32 @@ public class Poster {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		JLabel label = new JLabel("中文");
-		label.setBounds(10, 115, 54, 15);
+		JLabel label = new JLabel("中文(标题)");
+		label.setBounds(10, 115, 114, 15);
 		frame.getContentPane().add(label);
 
-		JLabel label_1 = new JLabel("英文");
+		JLabel label_1 = new JLabel("英文(内容)");
 		label_1.setBounds(10, 249, 54, 15);
 		frame.getContentPane().add(label_1);
 
 		JTextArea zh_text = new JTextArea();
 		zh_text.setText("沉默王二");
 		zh_text.setLineWrap(true);
-		zh_text.setBounds(79, 6, 558, 183);
+		zh_text.setBounds(136, 6, 501, 183);
 		frame.getContentPane().add(zh_text);
 
 		JTextArea en_text = new JTextArea();
 		en_text.setText("");
 		en_text.setLineWrap(true);
-		en_text.setBounds(79, 205, 558, 101);
+		en_text.setBounds(136, 205, 501, 101);
 		frame.getContentPane().add(en_text);
 
-		JLabel label_2 = new JLabel("图片路径");
-		label_2.setBounds(10, 323, 54, 15);
+		JLabel label_2 = new JLabel("图片路径(备注)");
+		label_2.setBounds(10, 323, 114, 15);
 		frame.getContentPane().add(label_2);
 
 		img_input = new JTextField();
-		img_input.setBounds(79, 319, 558, 21);
+		img_input.setBounds(136, 319, 501, 21);
 		frame.getContentPane().add(img_input);
 		img_input.setColumns(10);
 
