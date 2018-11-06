@@ -59,7 +59,7 @@ public class Poster {
 		frame.getContentPane().add(label);
 
 		JLabel label_1 = new JLabel("英文(内容)");
-		label_1.setBounds(10, 249, 54, 15);
+		label_1.setBounds(10, 249, 114, 15);
 		frame.getContentPane().add(label_1);
 
 		JTextArea zh_text = new JTextArea();
