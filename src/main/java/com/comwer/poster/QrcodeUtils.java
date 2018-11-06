@@ -45,7 +45,8 @@ public class QrcodeUtils {
 		HttpGet httpget = new HttpGet(headimgUrl);
 		httpget.addHeader("Content-Type", "text/html;charset=UTF-8");
 		// 配置请求的超时设置
-		RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(500).setConnectTimeout(500).setSocketTimeout(500).build();
+		RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(500).setConnectTimeout(500).setSocketTimeout(500)
+				.build();
 		httpget.setConfig(requestConfig);
 
 		File headimgFile = null;
@@ -100,13 +101,13 @@ public class QrcodeUtils {
 
 		// 消除字体模糊，消除抗锯齿
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		
+
 		// 绘制标题和备注
 		g.setColor(new Color(71, 71, 71));
 		Font font = new Font("微软雅黑", Font.BOLD, 36);
 		g.setFont(font);
 		FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
-		
+
 		int title_width = 0;
 		for (int i = 0; i < title.length(); i++) {
 			char c = title.charAt(i);
@@ -114,14 +115,10 @@ public class QrcodeUtils {
 			// 叠加，当前单词的长度
 			title_width += char_width;
 		}
-		
-		
+
 		int title_x = (bg.getWidth() - title_width) / 2;
 		g.drawString(title, title_x, 110);
 		g.drawString(memo, 46, bg.getHeight() - 210);
-		
-		
-		
 
 		// 绘制内容文字
 		font = new Font("微软雅黑", Font.PLAIN, 36);
@@ -231,9 +228,10 @@ public class QrcodeUtils {
 			int brief_line_height = FontDesignMetrics.getMetrics(font).getHeight();
 			int brief_x = margin;
 
-			g.drawString("沉默王二", brief_x, bg.getHeight() - margin - brief_line_height * 2);
-			g.drawString("近期目标：月入三万", brief_x, bg.getHeight() - margin - brief_line_height);
-			g.drawString("喜欢的话就扫码关注+转发分享，谢谢！", brief_x, bg.getHeight() - margin);
+			g.drawString("我是 沉默王二", brief_x, bg.getHeight() - margin - brief_line_height * 3);
+			g.drawString("一个不止写程序的全栈工程师", brief_x, bg.getHeight() - margin - brief_line_height * 2);
+			g.drawString("不喜欢叨叨叨，也不喜欢严肃专业", brief_x, bg.getHeight() - margin - brief_line_height);
+			g.drawString("只想写有趣的文字，给真善美的你", brief_x, bg.getHeight() - margin);
 
 			g.dispose();
 
