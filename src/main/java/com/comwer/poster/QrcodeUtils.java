@@ -228,7 +228,7 @@ public class QrcodeUtils {
 			int brief_line_height = FontDesignMetrics.getMetrics(font).getHeight();
 			int brief_x = margin;
 
-			g.drawString("我是 沉默王二", brief_x, bg.getHeight() - margin - brief_line_height * 2);
+			g.drawString("我是沉默王二(微信号：qing_gee)", brief_x, bg.getHeight() - margin - brief_line_height * 2);
 			g.drawString("一个不止写程序的全栈工程师", brief_x, bg.getHeight() - margin - brief_line_height);
 			g.drawString("只写有趣的文字，给不喜欢严肃的你", brief_x, bg.getHeight() - margin);
 
