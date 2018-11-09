@@ -109,7 +109,7 @@ public class Poster {
 						imgURL = "http://cdn.iciba.com/news/word/big_" + formatDate + "b.jpg";
 					}
 
-					String filePath = QrcodeUtils.createQrcodeFile(zh, en, imgURL);
+					String filePath = QrcodeUtils.createQrcodeFile(zh, en, imgURL, 1);
 					poster_path.setText(filePath);
 				} catch (Exception e1) {
 					logger.error(e1.getMessage());
@@ -159,5 +159,39 @@ public class Poster {
 		});
 		button_1.setBounds(201, 349, 117, 29);
 		frame.getContentPane().add(button_1);
+		
+		JButton button_2 = new JButton("生成海报3");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String title = zh_text.getText();
+					if (StringUtils.isEmpty(title)) {
+						throw new Exception("标题不能为空");
+					}
+					
+					String content = en_text.getText();
+					if (StringUtils.isEmpty(content)) {
+						throw new Exception("内容不能为空");
+					}
+					
+					String imgURL = img_input.getText();
+					// 获取词霸的图片
+					if (StringUtils.isEmpty(imgURL)) {
+						String formatDate = DateFormatUtils.format(new Date(), "yyyyMMdd");
+						imgURL = "http://cdn.iciba.com/news/word/big_" + formatDate + "b.jpg";
+					}
+
+					String filePath = QrcodeUtils.createQrcodeFile(title, content, imgURL, 3);
+					poster_path.setText(filePath);
+				} catch (Exception e1) {
+					logger.error(e1.getMessage());
+					logger.error(e1.getMessage(), e1);
+					
+					poster_path.setText(e1.getMessage());
+				}
+			}
+		});
+		button_2.setBounds(328, 349, 117, 29);
+		frame.getContentPane().add(button_2);
 	}
 }

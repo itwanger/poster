@@ -39,7 +39,7 @@ public class QrcodeUtils {
 	// 外边距
 	private static int margin = 25;
 
-	public static String createQrcodeFile(String zh, String en, String headimgUrl) throws Exception {
+	public static String createQrcodeFile(String zh, String en, String headimgUrl, int flag) throws Exception {
 		ClassLoader classLoader = QrcodeUtils.class.getClassLoader();
 		CloseableHttpClient httpclient = HttpClientBuilder.create().build();
 		HttpGet httpget = new HttpGet(headimgUrl);
@@ -87,7 +87,7 @@ public class QrcodeUtils {
 		InputStream qrcodeInputStream = classLoader.getResourceAsStream("default_qrcodeimg.jpg");
 		FileUtils.copyInputStreamToFile(qrcodeInputStream, qrcodeFile);
 
-		return increasingImage(qrcodeFile, bgFile, headimgFile, zh, en);
+		return increasingImage(qrcodeFile, bgFile, headimgFile, zh, en, flag);
 	}
 
 	public static String createPoster2File(String title, String content, String memo) throws Exception {
@@ -150,7 +150,7 @@ public class QrcodeUtils {
 		return poster.getAbsolutePath();
 	}
 
-	private static String increasingImage(File qrcodeFile, File bgFile, File headimgFile, String zh, String en) throws Exception {
+	private static String increasingImage(File qrcodeFile, File bgFile, File headimgFile, String zh, String en, int flag) throws Exception {
 		try {
 			BufferedImage qrcode = ImageIO.read(qrcodeFile);
 			BufferedImage bg = ImageIO.read(bgFile);
@@ -216,7 +216,23 @@ public class QrcodeUtils {
 			}
 
 			if (StringUtils.isNotEmpty(en)) {
-				drawEn(g, en, zh_y + zh_line_height * rows.length + 10);
+				if (flag == 1) {
+					drawEn(g, en, zh_y + zh_line_height * rows.length + 10);
+				} else {
+					zh_y +=  zh_line_height * rows.length + 10;
+					
+					g.setColor(new Color(157, 157, 157));
+					font = new Font("微软雅黑", Font.PLAIN, 26);
+					g.setFont(font);
+					metrics = FontDesignMetrics.getMetrics(font);
+					int en_line_height = FontDesignMetrics.getMetrics(font).getHeight();
+					
+					String[] rows1 = makeZhLineFeed(en, metrics, bg.getWidth() - margin * 2).split("\n");
+					for (int i = 0; i < rows1.length; i++) {
+						g.drawString(rows1[i], zh_x, zh_y + en_line_height * i);
+					}
+				}
+				
 			}
 
 			// 个人简介
@@ -228,8 +244,8 @@ public class QrcodeUtils {
 			int brief_line_height = FontDesignMetrics.getMetrics(font).getHeight();
 			int brief_x = margin;
 
-			g.drawString("我是沉默王二(微信号：qing_gee)", brief_x, bg.getHeight() - margin - brief_line_height * 2);
-			g.drawString("一个不止写程序的全栈工程师", brief_x, bg.getHeight() - margin - brief_line_height);
+			g.drawString("我是沉默王二(微信号：qing_gee)", brief_x, bg.getHeight() - margin - brief_line_height * 2 - 10);
+			g.drawString("一个不止写程序的全栈工程师", brief_x, bg.getHeight() - margin - brief_line_height - 5);
 			g.drawString("只写有趣的文字，给不喜欢严肃的你", brief_x, bg.getHeight() - margin);
 
 			g.dispose();
@@ -244,7 +260,7 @@ public class QrcodeUtils {
 			throw new Exception("海报二维码生成时发生异常！", e);
 		}
 	}
-
+	
 	private static void drawEn(Graphics2D g, String en, int y_start) {
 		g.setColor(new Color(157, 157, 157));
 		Font font = new Font("微软雅黑", Font.PLAIN, 28);
@@ -339,4 +355,5 @@ public class QrcodeUtils {
 		}
 		return entity == null ? null : entity.getContent();
 	}
+	
 }
