@@ -118,7 +118,7 @@ public class QrcodeUtils {
 
 		int title_x = (bg.getWidth() - title_width) / 2;
 		g.drawString(title, title_x, 110);
-		g.drawString(memo, 46, bg.getHeight() - 210);
+		g.drawString(memo, 46, bg.getHeight() - 137);
 
 		// 绘制内容文字
 		font = new Font("微软雅黑", Font.PLAIN, 36);
