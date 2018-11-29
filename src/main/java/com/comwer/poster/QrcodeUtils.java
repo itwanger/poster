@@ -245,7 +245,7 @@ public class QrcodeUtils {
 			int brief_x = margin;
 
 			g.drawString("我是沉默王二(微信号：qing_gee)", brief_x, bg.getHeight() - margin - brief_line_height * 2 - 10);
-			g.drawString("一个不止会写程序的全栈工程师", brief_x, bg.getHeight() - margin - brief_line_height - 5);
+			g.drawString("一个不止会写代码的程序员", brief_x, bg.getHeight() - margin - brief_line_height - 5);
 			g.drawString("还会写有趣的文字，给不喜欢严肃的你", brief_x, bg.getHeight() - margin);
 
 			g.dispose();
