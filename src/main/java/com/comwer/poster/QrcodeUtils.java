@@ -41,6 +41,7 @@ public class QrcodeUtils {
 
 	public static String createQrcodeFile(String zh, String en, String headimgUrl, int flag) throws Exception {
 		ClassLoader classLoader = QrcodeUtils.class.getClassLoader();
+		
 		CloseableHttpClient httpclient = HttpClientBuilder.create().build();
 		HttpGet httpget = new HttpGet(headimgUrl);
 		httpget.addHeader("Content-Type", "text/html;charset=UTF-8");
