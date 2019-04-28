@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -27,14 +24,20 @@ import org.slf4j.LoggerFactory;
 public class CapturePic {
 	private static Logger logger = LoggerFactory.getLogger(CapturePic.class);
 	
-	private static String handleResponse(final HttpResponse response, Charset charset) throws IOException {
-		HttpEntity entity = handleResponse(response);
-		return entity == null ? null : EntityUtils.toString(entity, charset);
-	}
-
+	/**
+	 * 从 HttpResponse 实例中获取状态码、错误信息、以及响应信息等等.
+	 * 
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
 	private static HttpEntity handleResponse(final HttpResponse response) throws IOException {
+		// 状态码
 		final StatusLine statusLine = response.getStatusLine();
+		// 获取响应实体
 		final HttpEntity entity = response.getEntity();
+		
+		// 状态码一旦大于 300 表示请求失败
 		if (statusLine.getStatusCode() >= 300) {
 			EntityUtils.consume(entity);
 			throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
@@ -42,8 +45,19 @@ public class CapturePic {
 		return entity;
 	}
 	
-	private static File createTmpFile(InputStream inputStream, String name, String ext) throws IOException {
-		File tmpFile = File.createTempFile(name, '.' + ext);
+	/**
+	 * 将输入流信息读入到临时文件中
+	 * 
+	 * @param inputStream
+	 * @param prefix
+	 * @param suffix
+	 * @param directory
+	 * @return
+	 * @throws IOException
+	 */
+	private static File createTmpFile(InputStream inputStream, String prefix, String suffix, File directory) throws IOException {
+		// 在指定目录中创建一个新的空文件，使用给定的前缀和后缀字符串生成其名称。 
+		File tmpFile = File.createTempFile(prefix, suffix, directory);
 
 		tmpFile.deleteOnExit();
 
@@ -64,6 +78,7 @@ public class CapturePic {
 		
 		// 根据路径发起 HTTP get 请求
 		HttpGet httpget = new HttpGet(args[0]);
+		// 使用 addHeader 方法添加请求头部
 		httpget.addHeader("Content-Type", "text/html;charset=UTF-8");
 		
 		// 配置请求的超时设置
@@ -73,31 +88,21 @@ public class CapturePic {
 
 		File pic = null;
 
-		// 
+		// 使用 HttpClientBuilder 创建 CloseableHttpClient 对象
+		// CloseableHttpClient 是一个抽象类，它是 HttpClient 的基本实现，也实现了java.io.Closeable。
 		CloseableHttpClient httpclient = HttpClientBuilder.create().build();
+		
+		// 通过执行此 HttpGet 请求获取 CloseableHttpResponse 实例
+		// 获取响应信息的输入流
 		try (CloseableHttpResponse response = httpclient.execute(httpget);
-				InputStream headimgStream = handleResponse(response).getContent();) {
+				// InputStream 实现了 Closeable 接口
+				InputStream picStream = handleResponse(response).getContent();) {
 
-			Header[] contentTypeHeader = response.getHeaders("Content-Type");
-			if (contentTypeHeader != null && contentTypeHeader.length > 0) {
-				if (contentTypeHeader[0].getValue().startsWith(ContentType.APPLICATION_JSON.getMimeType())) {
-
-					// application/json; encoding=utf-8 下载媒体文件出错
-					String responseContent = handleResponse(response, Consts.UTF_8);
-
-					logger.warn("下载网络顶部图出错{}", responseContent);
-				}
-			}
-
-			pic = createTmpFile(headimgStream, "headimg_" + IdGen.uuid(), "jpg");
+			pic = createTmpFile(picStream, "pic_" + IdGen.uuid(), ".jpg");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			pic = Files.createTempFile("headimg_" + IdGen.uuid(), ".jpg").toFile();
-
-			ClassLoader classLoader = CapturePic.class.getClassLoader();
-			InputStream headimgStream1 = classLoader.getResourceAsStream("default_headimg.jpg");
-			FileUtils.copyInputStreamToFile(headimgStream1, pic);
 		} finally {
+			// 释放连接
 			httpget.releaseConnection();
 		}
 
