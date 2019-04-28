@@ -3,7 +3,6 @@ package com.comwer.poster;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,13 +11,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Poster {
-	private static Logger logger = LoggerFactory.getLogger(Poster.class);
-	
+public class App {
+	private static Logger logger = LoggerFactory.getLogger(App.class);
+
 	private JFrame frame;
 	private JTextField img_input;
 
@@ -29,7 +27,7 @@ public class Poster {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Poster window = new Poster();
+					App window = new App();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,7 +39,7 @@ public class Poster {
 	/**
 	 * Create the application.
 	 */
-	public Poster() {
+	public App() {
 		initialize();
 	}
 
@@ -91,7 +89,7 @@ public class Poster {
 		JLabel lblNewLabel = new JLabel("海报路径");
 		lblNewLabel.setBounds(10, 406, 54, 15);
 		frame.getContentPane().add(lblNewLabel);
-		
+
 		JButton button = new JButton("生成海报");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -103,18 +101,12 @@ public class Poster {
 					String en = en_text.getText();
 					String imgURL = img_input.getText();
 
-					// 获取词霸的图片
-					if (StringUtils.isEmpty(imgURL)) {
-						String formatDate = DateFormatUtils.format(new Date(), "yyyyMMdd");
-						imgURL = "http://cdn.iciba.com/news/word/big_" + formatDate + "b.jpg";
-					}
-
-					String filePath = QrcodeUtils.createQrcodeFile(zh, en, imgURL, 1);
+					String filePath = PosterUtil.create(imgURL, zh, en);
 					poster_path.setText(filePath);
 				} catch (Exception e1) {
 					logger.error(e1.getMessage());
 					logger.error(e1.getMessage(), e1);
-					
+
 					poster_path.setText(e1.getMessage());
 				}
 			}

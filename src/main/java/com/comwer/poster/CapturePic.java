@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 public class CapturePic {
 	private static Logger logger = LoggerFactory.getLogger(CapturePic.class);
+
+	private static final Path DIRECTORY = Paths.get("D:\\test");
 
 	/**
 	 * 从 HttpResponse 实例中获取状态码、错误信息、以及响应信息等等.
@@ -54,12 +60,9 @@ public class CapturePic {
 	 * @return
 	 * @throws IOException
 	 */
-	private static File createTmpFile(InputStream inputStream, String prefix, String suffix, File directory)
-			throws IOException {
+	private static File createTmpFile(InputStream inputStream, String prefix, String suffix) throws IOException {
 		// 在指定目录中创建一个新的空文件，使用给定的前缀和后缀字符串生成其名称。
-		File tmpFile = File.createTempFile(prefix, suffix, directory);
-		// 请求在虚拟机终止时删除此抽象路径名所表示的文件或目录。
-		// tmpFile.deleteOnExit();
+		File tmpFile = Files.createTempFile(DIRECTORY, prefix, suffix).toFile();
 
 		// 新建文件输出流对象
 		FileOutputStream fos = new FileOutputStream(tmpFile);
@@ -76,12 +79,18 @@ public class CapturePic {
 		return tmpFile;
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static File capture() {
+		return capture(null);
+	}
+	
+	public static File capture(String picURL) {
 		logger.debug("根据输入的路径采集网络图片");
 
 		// 金山词霸的图片路径
-		String formatDate = DateFormatUtils.format(new Date(), "yyyyMMdd");
-		String picURL = "http://cdn.iciba.com/news/word/big_" + formatDate + "b.jpg";
+		if (StringUtils.isEmpty(picURL)) {
+			String formatDate = DateFormatUtils.format(new Date(), "yyyyMMdd");
+			picURL = "http://cdn.iciba.com/news/word/big_" + formatDate + "b.jpg";
+		}
 
 		// 根据路径发起 HTTP get 请求
 		HttpGet httpget = new HttpGet(picURL);
@@ -105,7 +114,7 @@ public class CapturePic {
 				// InputStream 实现了 Closeable 接口
 				InputStream picStream = handleResponse(response).getContent();) {
 
-			pic = createTmpFile(picStream, "pic_" + IdGen.uuid(), ".jpg", new File("D:\\test"));
+			pic = createTmpFile(picStream, "pic_", ".jpg");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -116,8 +125,13 @@ public class CapturePic {
 		if (pic != null && !pic.exists()) {
 			throw new IllegalArgumentException("请提供正确的网络图片路径！");
 		}
-
 		logger.debug(pic.getAbsolutePath());
+
+		return pic;
+	}
+
+	public static void main(String[] args) {
+		capture();
 	}
 
 }
