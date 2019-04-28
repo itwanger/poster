@@ -58,9 +58,10 @@ public class CapturePic {
 	private static File createTmpFile(InputStream inputStream, String prefix, String suffix, File directory) throws IOException {
 		// 在指定目录中创建一个新的空文件，使用给定的前缀和后缀字符串生成其名称。 
 		File tmpFile = File.createTempFile(prefix, suffix, directory);
-
+		// 文件已存在的话，删除。
 		tmpFile.deleteOnExit();
 
+		// 新建文件输出流对象
 		try (FileOutputStream fos = new FileOutputStream(tmpFile)) {
 			int read = 0;
 			byte[] bytes = new byte[1024 * 100];
